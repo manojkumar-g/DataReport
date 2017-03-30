@@ -1,0 +1,92 @@
+@import "jeet"
+@import "rupture"
+@import url('https://fonts.googleapis.com/css?family=Dosis|Play')
+
+*
+  box-sizing border-box
+  position relative
+  font-family Dosis
+body
+  background: $silver
+#container
+  center(960px)
+  background $white
+  margin-top: 10vh
+  height: 90vh
+  box-shadow: 0px 0px 39px 2px rgba(0,0,0,0.75)
+  +below(600px)
+    margin-top: 0vh
+header
+  column(1)
+  background: url('https://image.desiringgod.org/your-hospital-visit-is-coming-drd9pkdf-en/landscape/large_your-hospital-visit-is-coming-drd9pkdf.jpg?1460487705')
+  background-color: $olive
+  background-blend-mode: multiply
+  height: 40vh
+  h1
+    font-family: Play
+    color $white
+    normal()
+    padding-left: 30px
+.searchBox
+  column(1)
+  margin-top: 10vh
+  article
+    center(600px)
+  input
+    span(10/12)
+    height: 50px
+    font-size: 1.5em
+  button
+    cursor: pointer
+    span(2/12)
+    height: 50px
+    background $orange
+    color $white
+    font-size 1.5em
+    border 0
+    text-align: center
+#model
+  position absolute
+  margin-left -9999px
+  visibility hidden
+  &:checked + label
+    z-index: 1
+    background: $orange
+    width: 100%
+    height: 100%
+    position: fixed
+    top: 0
+    opacity: 1
+    left: 0
+  &:checked + label .modelbody
+    opacity: 1
+    display: block
+    height: 100%
+.modelWindow
+    background: $orange
+    opacity: 0
+    width: 100%
+    height: 0%
+    transition: all .3s
+    transition-timing-function: $ease-in-out-quad
+.modelbody
+    center(960px)
+    margin-top: 25vh
+    opacity: 0
+    display: none
+    height: 0%
+    transition: all 1s
+.modelContent
+    center(500px)
+    background: $white
+    height: 50vh
+    box-shadow: 0px 0px 39px 2px rgba(0,0,0,0.75)
+    color: $gray
+.modelHeader
+    column(1)
+    h3
+      text-align: center
+.close
+  color:red
+  font-size: 3em
+  cursor: pointer
