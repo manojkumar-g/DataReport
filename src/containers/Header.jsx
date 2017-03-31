@@ -18,17 +18,19 @@ class Header extends React.Component {
             <button
               onClick = {toggleModel}
             >
-              <span>
+              <span
+
+                >
                   <i className="fa fa-plus" aria-hidden="true"></i>
-                  <input type = 'radio' id='model' checked = {isOpen}/>
-                  <label htmlFor="model" className = 'modelWindow'>
-                    <div className ='modelbody'>
-                      <ModelBody close = {toggleModel}/>
-                    </div>
-                  </label>
               </span>
             </button>
           </article>
+          <input type = 'radio' id='model' checked = {isOpen}/>
+          <label htmlFor="model" className = 'modelWindow'>
+            <div className ='modelbody'>
+              <ModelBody close = {toggleModel}/>
+            </div>
+          </label>
         </section>
       </header>
     )
