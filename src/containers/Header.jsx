@@ -11,7 +11,7 @@ class Header extends React.Component {
     const {toggleModel,isOpen} = this.props
     return(
       <header>
-        <h1>The Report</h1>
+        <h1><span>The</span> Report</h1>
         <section className = 'searchBox'>
           <article>
             <input type = 'text' placeholder = 'Search By Name'/>
@@ -28,7 +28,9 @@ class Header extends React.Component {
           <input type = 'radio' id='model' checked = {isOpen}/>
           <label htmlFor="model" className = 'modelWindow'>
             <div className ='modelbody'>
-              <ModelBody close = {toggleModel}/>
+              {
+                isOpen && <ModelBody close = {toggleModel}/>
+              }
             </div>
           </label>
         </section>

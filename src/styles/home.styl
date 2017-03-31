@@ -1,6 +1,6 @@
 @import "jeet"
 @import "rupture"
-@import url('https://fonts.googleapis.com/css?family=Dosis|Play')
+@import url('https://fonts.googleapis.com/css?family=Dosis|Play|Satisfy')
 
 *
   box-sizing border-box
@@ -27,6 +27,8 @@ header
     color $white
     normal()
     padding-left: 30px
+    span
+      font-family: Satisfy
 .searchBox
   column(1)
   margin-top: 10vh
@@ -77,30 +79,81 @@ header
     height: 0%
     transition: all 1s
 .modelContent
-    center(500px)
-    background: $white
-    height: 50vh
-    box-shadow: 0px 0px 39px 2px rgba(0,0,0,0.75)
-    color: $gray
+  center(500px)
+  background: $white
+  height: 400px
+  box-shadow: 0px 0px 39px 2px rgba(0,0,0,0.75)
+  color: $gray
 .modelHeader
-    column(1)
-    h3
-      text-align: center
+  column(1)
+  text-align: center
 .close
+  column(1)
+  text-align: center
   color:red
-  font-size: 3em
-  cursor: pointer
+  font-size: 4em
+  i
+    cursor: pointer
+    &:hover
+        transform: rotateZ(90deg)
+        transition: all .5s
+    &:not(:hover)
+          transform: rotateZ(-90deg)
+          transition: all .5s
 .modelForm
   column(1)
 .formbody
   center(400px)
   height 180px
   footer
+    column(1)
+    bottom: 0
+    text-align center
     i
-      text-align center
-      margin 10px
+      margin: 10px
+      font-size: 1.5em
       cursor pointer
 .compleate
   color $green
 .active
   color $red
+  animation: glow .7s infinite alternate
+.single
+  center(400px)
+  text-align: center
+  height: 150px
+  h2
+    column(1)
+    color: $gray
+    padding: 0
+  input
+    column(1)
+.gender
+  i
+    cursor: pointer
+    margin: 20px
+    font-size: 2em
+  .act
+    color: $teal
+.comment
+  width: 100%
+.summary
+  color $navy
+  column(1)
+  span
+    display: block
+    font-size: 1em
+    margin-top: 0
+    padding: 0
+    i
+      color: $red
+      padding: 5px
+      cursor: pointer
+#submitbtn
+  center()
+  button: green 'large'
+@keyframes glow
+  from
+    color: $red
+  to
+    color: $gray
