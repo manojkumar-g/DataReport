@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node node_modules/babel-cli/bin/babel-node.js server.js"
   },
   "repository": {
     "type": "git",
@@ -19,18 +19,23 @@
   "homepage": "https://github.com/manojkumargit/NewEnvironmentForReact#readme",
   "dependencies": {
     "autoprefixer-stylus": "^0.13.0",
+    "axios": "^0.16.0",
     "axis": "^1.0.0",
+    "babel-cli": "^6.24.0",
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.8",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
+    "body-parser": "^1.17.1",
     "css-loader": "^0.26.1",
     "express": "^4.14.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "html-webpack-plugin": "^2.24.1",
     "jeet": "^7.1.0",
     "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "mongoose": "^4.9.2",
     "nib": "^1.1.2",
     "prettier": "^0.22.0",
     "react": "^15.4.1",
@@ -46,6 +51,7 @@
     "style-loader": "^0.13.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^2.4.0",
+    "validator": "^7.0.0",
     "webpack": "^1.13.3",
     "webpack-dev-middleware": "^1.8.4",
     "webpack-hot-middleware": "^2.13.2",

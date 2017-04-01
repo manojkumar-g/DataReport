@@ -1,20 +1,28 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { toggleModel } from '../actions'
+import { toggleModel, filterByName } from '../actions'
 import ModelBody from '../components/ModelBody.jsx'
 
 class Header extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {name : ''}
+  }
+  onChange = (e) =>{
+    this.props.filterByName(e.target.value)
   }
   render(){
-    const {toggleModel,isOpen} = this.props
+    const { toggleModel, isOpen, name } = this.props
     return(
       <header>
         <h1><span>The</span> Report</h1>
         <section className = 'searchBox'>
           <article>
-            <input type = 'text' placeholder = 'Search By Name'/>
+            <input type = 'text'
+              placeholder = 'Search By Name'
+              onChange = {this.onChange}
+              value = { name }
+            />
             <button
               onClick = {toggleModel}
             >
@@ -40,8 +48,9 @@ class Header extends React.Component {
 }
 
 export default connect(
-  (state) => ({
-    isOpen : state.isModelOpen
+  (store) => ({
+    isOpen : store.isModelOpen,
+    name : store.name
   }),
-  {toggleModel}
+  { toggleModel,filterByName }
 )(Header)

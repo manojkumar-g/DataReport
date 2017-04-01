@@ -12,8 +12,10 @@ body
   center(960px)
   background $white
   margin-top: 10vh
-  height: 90vh
   box-shadow: 0px 0px 39px 2px rgba(0,0,0,0.75)
+  padding-bottom 5vh
+  height 100vh
+  margin-bottom 5vh
   +below(600px)
     margin-top: 0vh
 header
@@ -137,6 +139,8 @@ header
     color: $teal
 .comment
   width: 100%
+  height 50px
+  font-size 1em
 .summary
   color $navy
   column(1)
@@ -149,9 +153,49 @@ header
       color: $red
       padding: 5px
       cursor: pointer
+.validators
+  span
+    margin-left 5px
+    display block
+    color $red
+  .solved
+    color $green
 #submitbtn
   center()
   button: green 'large'
+.results
+  column(1)
+  overflow scroll
+  height 60vh
+.datalist
+  margin-top 5vh
+  center(600px)
+.singleReport
+  column(1)
+  border 1px solid $silver
+  border-radius: 6px 6px 6px 6px;
+  background $olive
+  cursor pointer
+  h1
+    color navy
+    margin-left 50px
+.hidehead
+  text-align center
+  column(1)
+  background $maroon
+  margin-bottom -11px
+  ul
+    inline-list()
+    padding-left 50px
+    color $white
+.hidefoot
+  column(1)
+  background $silver
+  color navy
+  p
+    blockquote()
+    font-size 1em
+    margin-left 50px
 @keyframes glow
   from
     color: $red

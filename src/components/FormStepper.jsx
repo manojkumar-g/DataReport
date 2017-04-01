@@ -1,11 +1,18 @@
 import React from 'react'
 import { Motion, spring, presets } from 'react-motion'
 import range from 'lodash/range'
+import isAlpha from 'validator/lib/isAlpha'
+import slice from 'lodash/slice'
+import moment from 'moment'
+import {connect} from 'react-redux'
+import {postData} from '../actions'
 
-export default class FormStepper extends React.Component{
+class FormStepper extends React.Component{
   constructor(props) {
     super(props)
-    this.state = { stepNo:0,
+
+    this.state = {
+      stepNo:0,
       formDetails :{
         firstName:'',
         lastName :'',
@@ -16,15 +23,22 @@ export default class FormStepper extends React.Component{
       },
       errors :[
          [{name : 'alpha', desc : 'Must only Contain Alphabets', isSolved : false},
-                      {name: 'Required',desc:'Should not be Null', isSolved:false}],
+          {name: 'Required',desc:'Should not be Null', isSolved:false}],
+
          [{name : 'alpha', desc : 'Must only Contain Alphabets', isSolved : false},
-                      {name: 'Required',desc:'Should not be Null', isSolved:false}],
-        [{name : 'validDate', desc : 'You must EnterValid Date', isSolved : false},
-                      {name: 'Required',desc:'Should not be Null', isSolved:false}],
-        [{name: 'Required',desc:'Should not be Null', isSolved:false}],
+          {name: 'Required',desc:'Should not be Null', isSolved:false}],
+
+        [{name : 'validDate', desc : 'Must be a validDate', isSolved : false},
+         {name : 'past', desc : 'You must Enter past Date', isSolved : false},
+         {name: 'Required',desc:'Should not be Null', isSolved:false}],
+
+        [{name: 'Required',desc:'Should select ', isSolved:false}],
+
         [{name : 'onlynum', desc : 'Must only Contain valid phone number', isSolved : false},
-              {name: 'Required',desc:'Should not be Null', isSolved:false}],
+        {name: 'Required',desc:'Should not be Null', isSolved:false}],
+
        [{name: 'Required',desc:'Should not be Null', isSolved:false}],
+       [],[]
       ]
   }
   }
@@ -48,7 +62,7 @@ export default class FormStepper extends React.Component{
        aria-hidden='true'></i>
   }
   motionForm = (props) => {
-    let {stepNo} = this.state
+    let {stepNo,errors} = this.state
     return (
       <Motion
        style = {{
@@ -59,7 +73,19 @@ export default class FormStepper extends React.Component{
        {
          ({w,op,dis}) =>
            <div className = 'single' style = {{ width: w+'%', opacity : op ,display: stepNo === props.ind ? 'block' : 'none' }}>
-
+            <section className="validators">
+              {errors[props.ind].map(
+                ({name,desc,isSolved}) =>
+                    <span
+                      key = {name+'valid'+props.ind}
+                      className = {isSolved ? 'solved':''}
+                      >
+                      {!isSolved && <i className="fa fa-exclamation-triangle" aria-hidden="true"></i>}
+                      {isSolved && <i className="fa fa-check-square" aria-hidden="true"></i>}
+                      {desc}
+                    </span>
+              )}
+            </section>
              {props.children}
            </div>
        }
@@ -67,39 +93,162 @@ export default class FormStepper extends React.Component{
     )
   }
   onChange =(e) =>{
-      this.setState({
-        formDetails :{
-          ...this.state.formDetails,
-          [e.target.name]: e.target.value
+      let {formDetails,stepNo,errors} = this.state
+      let {name,value} = e.target
+
+
+      if(stepNo === 0){
+        let error = [
+          {...errors[0][0],isSolved : isAlpha(value)},
+          {...errors[0][1],isSolved : value.length > 0}
+        ]
+        this.setState({
+          formDetails :{
+            ...formDetails,
+            [name]: value,
+          },
+          errors:[
+            error,
+            ...slice(errors,1)
+          ]
+        })
+      }
+      else if(stepNo === 1){
+        let error = [
+          {...errors[1][0],isSolved : isAlpha(value)},
+          {...errors[1][1],isSolved : value.length > 0}
+        ]
+        this.setState({
+          formDetails :{
+            ...formDetails,
+            [name]: value,
+          },
+          errors:[
+            errors[0],
+            error,
+            ...slice(errors,2)
+          ]
+        })
+      }
+      else if(stepNo === 4){
+        if (value.length >10) {
+          return
         }
-      })
+        let lastChar = value.charAt(value.length-1)
+        if(isNaN(lastChar)){
+          return
+        }
+        let error = [
+          {...errors[4][0],isSolved: !isNaN(value) && value.length === 10 },
+          {...errors[4][1],isSolved: value.length > 0}
+        ]
+        this.setState({
+          formDetails :{
+            ...formDetails,
+            [name]: value,
+          },
+          errors:[
+            ...slice(errors,0,4),
+            error,
+            ...slice(errors,5)
+          ]
+        })
+      }
+      else {
+        let error = [
+          {...errors[5][0],isSolved: value.length > 0}
+        ]
+        this.setState({
+          formDetails :{
+            ...formDetails,
+            [name]: value,
+          },
+          errors:[
+            ...slice(errors,0,5),
+            error,
+            [],[]
+          ]
+        })
+      }
 
   }
   onKeyUp = (e) => {
       if(e.keyCode === 13){
-        this.incOrDecStep(1)
+        let {errors,stepNo} = this.state
+        if(errors[stepNo].filter(
+                            ({isSolved}) => !isSolved
+                        ).length === 0)
+            this.incOrDecStep(1)
       }
   }
   onDateChange = (e) => {
     let value = e.target.value
-    let {formDetails} = this.state
-    if((value.length == 2 && formDetails.dob.length !==3) || (value.length == 5 && formDetails.dob.length !==6) )
+    if(value.length >10)
+      return
+    let lastChar = value.charAt(value.length-1)
+    if(isNaN(lastChar) && lastChar !== '/'){
+      return
+    }
+    if((lastChar === '/' && value.length !==3) &&
+      (lastChar === '/' && value.length !==6)
+      ){
+      return
+    }
+
+    let {formDetails,errors} = this.state
+    if((value.length == 2 && formDetails.dob.length !==3) ||
+        (value.length == 5 && formDetails.dob.length !==6)
+      )
       value = value+'/'
+    let date = moment(value,'DD/MM/YYYY',true).fromNow();
+    let error = [
+      {...errors[2][0],isSolved: date !== 'Invalid date' },
+      {...errors[2][1],isSolved: date.indexOf('ago') > 0 && date !== 'Invalid date' },
+      {...errors[2][2],isSolved: value.length > 0},
+    ]
+
     this.setState({
       formDetails : {
         ...formDetails,
         dob : value
-      }
+      },
+      errors : [
+        ...slice(errors,0,2),
+        error,
+        ...slice(errors,3)
+      ]
     })
   }
   onGenderClick = (gender) => {
+    let{errors} = this.state
     this.setState({
       formDetails : {
         ...this.state.formDetails,
         gender
       },
-      stepNo : this.state.stepNo + 1
+      stepNo : this.state.stepNo + 1,
+      errors:[
+        ...slice(errors,0,3),
+        [{...errors[3][0],isSolved:true}],
+        ...slice(errors,4)
+      ]
     })
+  }
+  submitForm = () => {
+    let {errors} = this.state
+    let validateFields = errors.map(
+      field => field.filter(
+        ({isSolved}) => !isSolved
+      ).length === 0
+    )
+    let errorsAt = validateFields.indexOf(false)
+    if(errorsAt >=0)
+      this.jumpStep(errorsAt)
+    else {
+      this.props.postData(this.state.formDetails)
+      this.incOrDecStep(1)
+    }
+
   }
   render(){
 
@@ -107,7 +256,7 @@ export default class FormStepper extends React.Component{
     return(
       <div className ='formbody'>
         <section className='formContent'>
-          {range(7).map(
+          {range(8).map(
             n =>
             <this.motionForm ind = {n} key = { 'form' + n }>
               {
@@ -287,7 +436,11 @@ export default class FormStepper extends React.Component{
                                       ></i>
                                   </span>
                                   <span>
-                                    <button id = 'submitbtn'>Submit</button>
+                                    <button id = 'submitbtn'
+                                      onClick = {this.submitForm}
+                                      >
+                                        Submit
+                                    </button>
                                   </span>
                                 </section>
 
@@ -295,7 +448,57 @@ export default class FormStepper extends React.Component{
                           }
                           </div>
                         )
+                  case 7:
+                      return(
+                        <div>
+                          { stepNo === n &&
+                            <span>
+                              <h2> {this.props.requestPost && 'Sending Data ...'}
+                               {this.props.successPost && 'SuccessFully Added Data ...'}
+                              {this.props.failurePost && 'Error happend while Adding Data ...'}</h2>
+                              <button id = 'submitbtn'
+                                onClick = {() =>{
+                                  this.setState(
+                                    {
+                                      stepNo:0,
+                                      formDetails :{
+                                        firstName:'',
+                                        lastName :'',
+                                        dob : '',
+                                        gender:'',
+                                        phone:'',
+                                        txt:''
+                                      },
+                                      errors :[
+                                         [{name : 'alpha', desc : 'Must only Contain Alphabets', isSolved : false},
+                                          {name: 'Required',desc:'Should not be Null', isSolved:false}],
 
+                                         [{name : 'alpha', desc : 'Must only Contain Alphabets', isSolved : false},
+                                          {name: 'Required',desc:'Should not be Null', isSolved:false}],
+
+                                        [{name : 'validDate', desc : 'Must be a validDate', isSolved : false},
+                                         {name : 'past', desc : 'You must Enter past Date', isSolved : false},
+                                         {name: 'Required',desc:'Should not be Null', isSolved:false}],
+
+                                        [{name: 'Required',desc:'Should select ', isSolved:false}],
+
+                                        [{name : 'onlynum', desc : 'Must only Contain valid phone number', isSolved : false},
+                                        {name: 'Required',desc:'Should not be Null', isSolved:false}],
+
+                                       [{name: 'Required',desc:'Should not be Null', isSolved:false}],
+                                       [],[]
+                                      ]
+                                  }
+
+                                  )
+                                }}
+                                >
+                                  Add One More
+                              </button>
+                            </span>
+                        }
+                      </div>
+                      )
                     }
 
                 })()
@@ -306,7 +509,7 @@ export default class FormStepper extends React.Component{
           )}
         </section>
         <footer>
-          {range(7).map(
+          {range(8).map(
             n => <span key = {'dotno'+n}>{this.dots(n)}</span>
           )}
         </footer>
@@ -315,3 +518,12 @@ export default class FormStepper extends React.Component{
     )
   }
 }
+
+export default connect(
+  (state) => ({
+    requestPost :state.requestPost,
+    successPost : state.successPost,
+    failurePost : state.failurePost
+  }),
+  {postData}
+)(FormStepper);
