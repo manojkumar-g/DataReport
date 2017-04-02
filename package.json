@@ -16,6 +16,9 @@
   "bugs": {
     "url": "https://github.com/manojkumargit/NewEnvironmentForReact/issues"
   },
+  "engines":{
+    "node": "7.5.0"
+  },
   "homepage": "https://github.com/manojkumargit/NewEnvironmentForReact#readme",
   "dependencies": {
     "autoprefixer-stylus": "^0.13.0",
