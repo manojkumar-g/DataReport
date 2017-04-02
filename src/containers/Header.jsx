@@ -29,7 +29,7 @@ class Header extends React.Component {
               <span
 
                 >
-                  <i className="fa fa-plus" aria-hidden="true"></i>
+                  New <i className="fa fa-plus" aria-hidden="true"></i>
               </span>
             </button>
           </article>
